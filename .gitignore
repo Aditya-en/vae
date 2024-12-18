@@ -2,3 +2,4 @@ vae.pth
 vae_initial.pth
 Landscape Classification
 samples
+__pycache__
