@@ -16,37 +16,30 @@ A Variational Autoencoder is a type of generative model that learns to encode in
 
 To train a VAE, we maximize the Evidence Lower Bound (ELBO), which can be written as:
 
-\[
-\text{ELBO} = \mathbb{E}\_{q(z|x)}[\log p(x|z)] - \text{KL}(q(z|x) \| p(z))
-\]
+**ELBO = E_q(z|x)[log p(x|z)] - KL(q(z|x) || p(z))**
 
 In simple terms:
 
-- The first term (Reconstruction Loss) measures how well the reconstructed data matches the input.
-- The second term (KL Divergence) measures how close the latent space distribution \( q(z|x) \) is to the prior \( p(z) \), which is typically a standard Gaussian distribution.
+- The first term (**Reconstruction Loss**) measures how well the reconstructed data matches the input.
+- The second term (**KL Divergence**) measures how close the latent space distribution `q(z|x)` is to the prior `p(z)`, which is typically a standard Gaussian distribution.
 
 During training, we minimize the negative ELBO, which is equivalent to minimizing:
 
-\[
-\text{Loss} = \text{Reconstruction Loss} + \beta \times \text{KL Divergence}
-\]
+**Loss = Reconstruction Loss + β \* KL Divergence**
 
-Here, \( \beta \) is a weight factor that controls the trade-off between the two terms (used in the **\( \beta \)-VAE** variant).
+Here, `β` is a weight factor that controls the trade-off between the two terms (used in the **β-VAE** variant).
 
 ### Reconstruction Loss
 
 For images, we often use **Binary Cross-Entropy (BCE)**:
-\[
-\text{Reconstruction Loss} = \text{BCE}(x, \hat{x})
-\]
+
+**Reconstruction Loss = BCE(x, x̂)**
 
 ### KL Divergence
 
-\[
-\text{KL Divergence} = -0.5 \sum (1 + \log \sigma^2 - \mu^2 - \sigma^2)
-\]
+KL Divergence = -0.5 \* Σ (1 + log(σ²) - μ² - σ²)
 
-Where \( \mu \) and \( \sigma \) are the mean and variance of the latent distribution learned by the encoder.
+Where `μ` and `σ` are the mean and standard deviation (or log variance) of the latent distribution learned by the encoder.
 
 ## Repository Overview
 
@@ -55,12 +48,12 @@ Where \( \mu \) and \( \sigma \) are the mean and variance of the latent distrib
 #### 1. **Model Architecture**
 
 - **Encoder**: Maps the input image to a latent representation by extracting features through convolutional layers.
-- **Latent Space**: Uses two linear layers to predict \( \mu \) (mean) and \( \log \sigma^2 \) (log variance) for the latent distribution.
-- **Reparameterization Trick**: Combines \( \mu \) and \( \sigma \) with random noise to create a latent vector \( z \):
-  \[
-  z = \mu + \epsilon \cdot \sigma, \quad \text{where } \epsilon \sim \mathcal{N}(0, 1)
-  \]
-- **Decoder**: Reconstructs the input image from the latent vector \( z \) using transposed convolutional layers.
+- **Latent Space**: Uses two linear layers to predict `μ` (mean) and `log(σ²)` (log variance) for the latent distribution.
+- **Reparameterization Trick**: Combines `μ` and `σ` with random noise to create a latent vector `z`:
+
+**z = μ + ε \* σ, where ε ~ N(0, 1)**
+
+- **Decoder**: Reconstructs the input image from the latent vector `z` using transposed convolutional layers.
 
 #### 2. **Dataset and Data Loading**
 
@@ -69,32 +62,30 @@ Where \( \mu \) and \( \sigma \) are the mean and variance of the latent distrib
 
 #### 3. **Training Loop**
 
-- **Loss Function**: Combines Binary Cross-Entropy (BCE) and KL Divergence, scaled by a factor \( \beta \).
+- **Loss Function**: Combines Binary Cross-Entropy (BCE) and KL Divergence, scaled by a factor `β`.
 - **Optimizer**: Adam optimizer with a learning rate of 0.001.
 - **Outputs**:
-  - Saves the model weights after every epoch.
-  - Generates sample images from random latent vectors and saves them to the `samples/` directory.
+- Saves the model weights after every epoch.
+- Generates sample images from random latent vectors and saves them to the `samples/` directory.
 
 ### Key Functions
 
 #### `encode`
 
-Takes an input image and outputs \( \mu \) and \( \log \sigma^2 \) for the latent space.
+Takes an input image and outputs `μ` and `log(σ²)` for the latent space.
 
 #### `reparameterize`
 
-Applies the reparameterization trick to sample a latent vector \( z \) from \( \mathcal{N}(\mu, \sigma^2) \).
+Applies the reparameterization trick to sample a latent vector `z` from `N(μ, σ²)`.
 
 #### `decode`
 
-Takes a latent vector \( z \) and generates a reconstructed image.
+Takes a latent vector `z` and generates a reconstructed image.
 
 #### `loss_function`
 
 Calculates the total loss as:
-\[
-\text{Loss} = \text{BCE}(x, \hat{x}) + \beta \times \text{KL Divergence}
-\]
+**Loss = BCE(x, x̂) + β \* KL Divergence**
 
 ### Example Usage
 
@@ -137,7 +128,7 @@ Generated samples will be saved in the `samples/` directory, with filenames like
 ## Future Improvements
 
 - Add support for more complex datasets.
-- Experiment with different values of \( \beta \) for better disentanglement of latent features.
+- Experiment with different values of `β` for better disentanglement of latent features.
 - Implement advanced loss functions like Wasserstein loss for smoother results.
 
 ## References
